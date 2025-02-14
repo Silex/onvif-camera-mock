@@ -9,6 +9,11 @@ gi.require_version('GstRtspServer', '1.0')
 from gi.repository import Gst, GstRtspServer, GObject, GLib
 
 # Ask wsdd nicely to terminate.
+interface = os.environ.get('IP')
+if interface is None:
+    print("Need IP")
+    sys.exit(1)
+
 interface = os.environ.get('INTERFACE')
 if interface is None:
     print("No interface such as 'eth0' or 'eno1' provided")
@@ -54,7 +59,7 @@ if os.system("pgrep rtsp-feed.py > /dev/null") == 0:
 if os.system("pgrep rtsp-feed.py > /dev/null") == 0:
     os.system("sudo pkill -9 rtsp-feed.py")
 
-ip4 = '0.0.0.0' # listen on all interfaces
+ip4 = ip
 os.system("sudo {}/onvif_srvd/onvif_srvd --ifs {} --scope onvif://www.onvif.org/name/TestDev --scope onvif://www.onvif.org/Profile/S --name RTSP --width 800 --height 600 --url rtsp://{}:8554/stream1 --type MPEG4 --firmware_ver {}".format(directory, interface, ip4, firmware_ver))
 os.system("{}/wsdd/wsdd --if_name {} --type tdn:NetworkVideoTransmitter --xaddr http://{}:1000/onvif/device_service --scope \"onvif://www.onvif.org/name/Unknown onvif://www.onvif.org/Profile/Streaming\"".format(directory, interface, ip4))
 

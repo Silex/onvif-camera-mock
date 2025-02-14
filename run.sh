@@ -15,11 +15,10 @@ INTERFACE='eth0' # inside docker it's always eth0
 
 # Run the Docker container with the provided arguments
 docker run --rm \
-    -p "$IP:8080:8080" \
-    -p "$IP:554:554" \
     -p "$IP:1000:1000" \
     -p "$IP:8554:8554" \
     -v "$MP4FILE:$MP4FILE" \
     -e INTERFACE="$INTERFACE" \
+    -e IP="$IP" \
     -e MP4FILE="$MP4FILE" \
     onvif-camera-mock-onvif-camera /onvif-camera-mock/main.py
